@@ -22,9 +22,13 @@ import gob.issste.usersM4.entities.ProfileM4;
 import gob.issste.usersM4.entities.UserM4;
 import gob.issste.usersM4.repositories.ProfileM4Repository;
 import gob.issste.usersM4.repositories.UserM4Repository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("usersM4")
+@Tag(name = "Usuarios", description = "Métodos HTTP para la gestión de Usuarios del sistema Meta4")
 public class UsersM4Controller {
 
 	@Autowired
@@ -32,13 +36,15 @@ public class UsersM4Controller {
 	@Autowired
 	ProfileM4Repository profileM4Repository;
 
+	@Operation(summary = "Listado de todos los usuarios del sistema Meta4 registrados", description = "Método para obtener el listado de todos los usuarios del sistema Meta4 registrados", tags = { "Usuarios" })
     @GetMapping()
     public List<UserM4> findAll() {
         return userM4Repository.findAll();
     }
 
+	@Operation(summary = "Obtener usuario del sistema Meta4 registrado mediante su ID", description = "Método para obtener un usuario del sistema Meta4 registrado, mediante su identificador interno", tags = {	"Usuarios" })
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable("id") long id) {
+    public ResponseEntity<?> get(@Parameter(description = "ID del usuario del que se desea obtener la información", required = true) @PathVariable("id") long id) {
         Optional<UserM4> customer = userM4Repository.findById(id);
         if (customer.isPresent()) {
             return new ResponseEntity<>(customer.get(), HttpStatus.OK);
@@ -47,15 +53,18 @@ public class UsersM4Controller {
         }
     }
 
+	@Operation(summary = "Agregar un nuevo usuario del sistema Meta4", description = "Método para agregar un nuevo usuario del sistema Meta4", tags = {	"Usuarios" })
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody UserM4 userM4) {
+    public ResponseEntity<?> post(@Parameter(description = "Objeto con datos del usuario a crearse en el Sistema") @RequestBody UserM4 userM4) {
         UserM4 uM4 = userM4Repository.save(userM4);
         return ResponseEntity.ok(uM4);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable("id") long id, @RequestBody UserM4 input) {
-         Optional<UserM4> optionalUser = userM4Repository.findById(id);
+	@Operation(summary = "Modificar usuario del sistema Meta4", description = "Método para modificar un usuario del sistema Meta4 ya registrado", tags = { "Usuarios" })
+	@PutMapping("/{id}")
+    public ResponseEntity<?> put(@Parameter(description = "ID del usuario que se desea modificar", required = true) @PathVariable("id") long id,
+    		@Parameter(description = "Objeto con datos del usuario a modificarse en el Sistema") @RequestBody UserM4 input) {
+        Optional<UserM4> optionalUser = userM4Repository.findById(id);
         if (optionalUser.isPresent()) {
 			UserM4 newUser = optionalUser.get();
 			newUser.setUserName(input.getUserName());
@@ -68,12 +77,14 @@ public class UsersM4Controller {
         }
     }
 
+	@Operation(summary = "Eliminar usuario del sistema Meta4", description = "Método para eliminar un usuario del sistema Meta4 ya registrado", tags = { "Usuarios" })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+    public ResponseEntity<?> delete(@Parameter(description = "ID del usuario que se desea eliminar", required = true) @PathVariable("id") long id) {
     	userM4Repository.deleteById(id);
     	return new ResponseEntity<>(HttpStatus.OK);
     }
 
+	@Operation(summary = "Inicializar información de usuarios del sistema Meta4", description = "Método para inicializar la información en la base de datos temporal, de los usuarios del sistema Meta4", tags = {	"Usuarios" })
     @GetMapping(value = "inicializa", produces = MediaType.TEXT_PLAIN_VALUE)
     public String inicializa() {
 
