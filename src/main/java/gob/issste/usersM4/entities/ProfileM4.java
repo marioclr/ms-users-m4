@@ -22,7 +22,7 @@ import lombok.Data;
 public class ProfileM4 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id; 
+	private Long id; 
 	private String profileCode;
 	private String description;
 	@JsonIgnore

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class UserM4 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String userName;
     private String password;
     private String numEmpleado;

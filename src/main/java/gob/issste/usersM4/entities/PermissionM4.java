@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class PermissionM4 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private Long id;
 	private String nombre;
 	private String descripcion;
 
