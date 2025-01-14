@@ -9,10 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PermissionM4 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,4 +28,5 @@ public class PermissionM4 {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = ProfileM4.class)
 	@JoinColumn(name = "profile_id", nullable = true)
 	private ProfileM4 profile;
+
 }

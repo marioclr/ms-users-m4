@@ -7,10 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserM4 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,4 +26,10 @@ public class UserM4 {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="perfil_id")
     private ProfileM4 perfil;
+
+    public void addperfil(ProfileM4 perfil) {
+    	setPerfil(perfil);
+    	perfil.setUserM4(this);
+    }
+
 }
