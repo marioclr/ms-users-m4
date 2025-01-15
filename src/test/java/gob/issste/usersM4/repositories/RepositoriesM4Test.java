@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -26,6 +28,8 @@ public class RepositoriesM4Test {
 	ProfileM4Repository profileM4Repository;
 
     @Test
+    @Tag("repositorio")
+	@DisplayName("Test para validar la consulta de permisos del repositorio")
     void findPermissionPorNombre() {
 
         when(permissionM4Repository.findAll()).thenReturn(DatosRepositories.PERMISOS);
@@ -39,6 +43,8 @@ public class RepositoriesM4Test {
     }
 
     @Test
+    @Tag("repositorio")
+	@DisplayName("Test para validar la consulta de permisos del repositorio")
     void findPermissionPorNombreListaVacia() {
     	List<PermissionM4> permisos = Collections.emptyList();
 
@@ -50,6 +56,8 @@ public class RepositoriesM4Test {
     }
 
     @Test
+    @Tag("repositorio")
+	@DisplayName("Test para validar la consulta de permisos asociados a un perfil")
     void testPermisosDePerfil() {
         when(permissionM4Repository.findAll()).thenReturn(DatosRepositories.PERMISOS);
         List<PermissionM4> permisos = permissionM4Repository.findAll();
@@ -58,6 +66,8 @@ public class RepositoriesM4Test {
     }
 
     @Test
+    @Tag("repositorio")
+	@DisplayName("Test para verificar llamada al método findAll en la consulta de permisos asociados a un perfil")
     void testPermisosDePerfilVerify() {
         when(permissionM4Repository.findAll()).thenReturn(DatosRepositories.PERMISOS);
         List<PermissionM4> permisos = permissionM4Repository.findAll();
@@ -67,6 +77,8 @@ public class RepositoriesM4Test {
     }
 
     @Test
+    @Tag("repositorio")
+	@DisplayName("Test para validar el auto incremento del ID en la función para guardar repositorios")
     void testGuardarExamen() {
         // Given
         ProfileM4 nuevoPerfil = DatosRepositories.PERFIL.get();
