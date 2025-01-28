@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins="http://localhost:4200", originPatterns = "*")
 @RestController
 @RequestMapping("profile")
 @Tag(name = "Perfiles", description = "Métodos HTTP para la gestión de Perfiles del sistema Meta4")
@@ -33,12 +34,14 @@ public class ProfileM4Controller {
 
 	@Operation(summary = "Listado de todos los p1erfiles del sistema Meta4 registrados", description = "Método para obtener el listado de todos los perfiles del sistema Meta4 registrados", tags = { "Perfiles" })
     @GetMapping()
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<ProfileM4> findAll() {
         return profileRepository.findAll();
     }
 
 	@Operation(summary = "Obtener perfil del sistema Meta4 registrado mediante su ID", description = "Método para obtener un perfil del sistema Meta4 registrado, mediante su identificador interno", tags = {	"Perfiles" })
     @GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> get(@Parameter(description = "ID del perfil del que se desea obtener la información", required = true) @PathVariable("id") long id) {
          Optional<ProfileM4> customer = profileRepository.findById(id);
         if (customer.isPresent()) {
@@ -50,6 +53,7 @@ public class ProfileM4Controller {
 
 	@Operation(summary = "Agregar un nuevo perfil del sistema Meta4", description = "Método para agregar un nuevo perfil del sistema Meta4", tags = {	"Perfiles" })
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> post(@Parameter(description = "Objeto con datos del perfil a crearse en el Sistema") @RequestBody ProfileM4 profile) {
     	profile.addPermission(profile.getPermisos());
     	ProfileM4 prof = profileRepository.save(profile);
@@ -58,6 +62,7 @@ public class ProfileM4Controller {
 
 	@Operation(summary = "Modificar perfil del sistema Meta4", description = "Método para modificar un perfil del sistema Meta4 ya registrado", tags = { "Perfiles" })
     @PutMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> put(@Parameter(description = "ID del perfil que se desea modificar", required = true) @PathVariable("id") long id,
     		@Parameter(description = "Objeto con datos del perfil a modificarse en el Sistema") @RequestBody ProfileM4 input) {
         Optional<ProfileM4> optionalProf = profileRepository.findById(id);
@@ -74,6 +79,7 @@ public class ProfileM4Controller {
 
 	@Operation(summary = "Eliminar perfil del sistema Meta4", description = "Método para eliminar un perfil del sistema Meta4 ya registrado", tags = { "Perfiles" })
     @DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@Parameter(description = "ID del perfil que se desea eliminar", required = true) @PathVariable("id") long id) {
     	profileRepository.deleteById(id);
     	return new ResponseEntity<>(HttpStatus.OK);

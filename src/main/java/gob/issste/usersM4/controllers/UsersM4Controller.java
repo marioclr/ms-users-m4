@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins="http://localhost:4200", originPatterns = "*")
 @RestController
 @RequestMapping("usersM4")
 @Tag(name = "Usuarios", description = "Métodos HTTP para la gestión de Usuarios del sistema Meta4")
@@ -40,12 +41,14 @@ public class UsersM4Controller {
 
 	@Operation(summary = "Listado de todos los usuarios del sistema Meta4 registrados", description = "Método para obtener el listado de todos los usuarios del sistema Meta4 registrados", tags = { "Usuarios" })
     @GetMapping()
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<UserM4> findAll() {
         return userM4Repository.findAll();
     }
 
 	@Operation(summary = "Obtener usuario del sistema Meta4 registrado mediante su ID", description = "Método para obtener un usuario del sistema Meta4 registrado, mediante su identificador interno", tags = {	"Usuarios" })
     @GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> get(@Parameter(description = "ID del usuario del que se desea obtener la información", required = true) @PathVariable("id") long id) {
         Optional<UserM4> customer = userM4Repository.findById(id);
         if (customer.isPresent()) {
@@ -57,6 +60,7 @@ public class UsersM4Controller {
 
 	@Operation(summary = "Agregar un nuevo usuario del sistema Meta4", description = "Método para agregar un nuevo usuario del sistema Meta4", tags = {	"Usuarios" })
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> post(@Parameter(description = "Objeto con datos del usuario a crearse en el Sistema") @RequestBody UserM4 userM4) {
         UserM4 uM4 = userM4Repository.save(userM4);
         return ResponseEntity.ok(uM4);
@@ -64,6 +68,7 @@ public class UsersM4Controller {
 
 	@Operation(summary = "Modificar usuario del sistema Meta4", description = "Método para modificar un usuario del sistema Meta4 ya registrado", tags = { "Usuarios" })
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> put(@Parameter(description = "ID del usuario que se desea modificar", required = true) @PathVariable("id") long id,
     		@Parameter(description = "Objeto con datos del usuario a modificarse en el Sistema") @RequestBody UserM4 input) {
         Optional<UserM4> optionalUser = userM4Repository.findById(id);
@@ -81,6 +86,7 @@ public class UsersM4Controller {
 
 	@Operation(summary = "Eliminar usuario del sistema Meta4", description = "Método para eliminar un usuario del sistema Meta4 ya registrado", tags = { "Usuarios" })
     @DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@Parameter(description = "ID del usuario que se desea eliminar", required = true) @PathVariable("id") long id) {
     	userM4Repository.deleteById(id);
     	return new ResponseEntity<>(HttpStatus.OK);
