@@ -45,7 +45,7 @@ public class SpringSecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests( (author) -> author
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll() // Rutas de Swagger
-				.requestMatchers(HttpMethod.GET, "/users").permitAll()
+				.requestMatchers(HttpMethod.GET, "/users", "users/page/{page}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                 // .requestMatchers(HttpMethod.POST, "users").hasRole("ADMIN")
                 // .requestMatchers(HttpMethod.GET, "profile", "profile/{id}").hasAnyRole("ADMIN", "USER")
